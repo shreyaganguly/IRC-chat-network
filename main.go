@@ -11,6 +11,16 @@ import (
 type IRCServer struct {
   Addr string
 }
+type Client struct {
+	RemoteAddress string
+	UserName string
+	HostIP string
+	RealName string
+
+}
+
+var ClientMap map[string]Client
+
 
 func NewIRCServer(host string, port int) *IRCServer {
   return &IRCServer{Addr: fmt.Sprintf("%s:%d", host, port) }
@@ -41,6 +51,7 @@ var (
 	port = flag.Int("t", 0, "port to listen for connections")
 )
 func main() {
+	ClientMap = make(map[string]Client) 
 	log.Println("Starting IRC Server..")
 	flag.Parse()
   server := NewIRCServer(*host, *port)
