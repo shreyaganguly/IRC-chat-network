@@ -18,8 +18,12 @@ type Client struct {
 	RealName string
 
 }
+type ChannelDetails struct {
+	Topic string
+}
 
 var ClientMap map[string]Client
+var ChannelMap map[string]ChannelDetails
 
 
 func NewIRCServer(host string, port int) *IRCServer {
@@ -51,7 +55,8 @@ var (
 	port = flag.Int("t", 0, "port to listen for connections")
 )
 func main() {
-	ClientMap = make(map[string]Client) 
+	ClientMap = make(map[string]Client)
+	ChannelMap = make(map[string]ChannelDetails)
 	log.Println("Starting IRC Server..")
 	flag.Parse()
   server := NewIRCServer(*host, *port)
