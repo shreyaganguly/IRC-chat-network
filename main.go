@@ -1,22 +1,20 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"log"
 	"net"
-  "fmt"
-	"flag"
 )
 
-
 type IRCServer struct {
-  Addr string
+	Addr string
 }
 type Client struct {
 	RemoteAddress string
-	UserName string
-	HostIP string
-	RealName string
-
+	UserName      string
+	HostIP        string
+	RealName      string
 }
 type ChannelDetails struct {
 	Topic string
@@ -25,9 +23,8 @@ type ChannelDetails struct {
 var ClientMap map[string]Client
 var ChannelMap map[string]ChannelDetails
 
-
 func NewIRCServer(host string, port int) *IRCServer {
-  return &IRCServer{Addr: fmt.Sprintf("%s:%d", host, port) }
+	return &IRCServer{Addr: fmt.Sprintf("%s:%d", host, port)}
 }
 
 func (s *IRCServer) ListenAndServe() {
@@ -50,15 +47,17 @@ func (s *IRCServer) ListenAndServe() {
 	}
 
 }
+
 var (
 	host = flag.String("b", "0.0.0.0", "Host name of the TCP Server")
 	port = flag.Int("t", 0, "port to listen for connections")
 )
+
 func main() {
 	ClientMap = make(map[string]Client)
 	ChannelMap = make(map[string]ChannelDetails)
 	log.Println("Starting IRC Server..")
 	flag.Parse()
-  server := NewIRCServer(*host, *port)
-  server.ListenAndServe()
+	server := NewIRCServer(*host, *port)
+	server.ListenAndServe()
 }
