@@ -69,7 +69,24 @@ func HandleTOPIC(con net.Conn, args []string) {
 		con.Write([]byte("\r"))
 	}
 }
+func HandleLIST(con net.Conn, args []string) {
+  log.Println("the arguments passed after LIST are", args)
+  var temp,reply string
+  servername, err := os.Hostname()
+  if err != nil {
+    log.Fatal("ERROR", err)
+  }
 
+  if len(args) == 0 {
+    for key,value := range ChannelMap {
+      temp = fmt.Sprintf(":%s 322  %s %s", servername, key, value.Topic)
+      reply = reply + temp + "\r\n"
+    }
+  }
+  reply1 := fmt.Sprintf(":%s 321   :",servername)
+  reply2 := fmt.Sprintf(":%s 323   :",servername)
+  con.Write([]byte(reply1 + "\r\n" + reply + reply2 + "\r\n"))
+}
 type commandHandler1 func(con net.Conn, args []string)
 
 var cmdMap = map[string]commandHandler1{
@@ -78,6 +95,7 @@ var cmdMap = map[string]commandHandler1{
 	"PING":  HandlePING,
 	"JOIN":  HandleJOIN,
 	"TOPIC": HandleTOPIC,
+  "LIST": HandleLIST,
 }
 
 func ConnectionHandler(con net.Conn) {
